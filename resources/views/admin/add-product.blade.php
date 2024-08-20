@@ -59,7 +59,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row" id="duplicate-row">
+                                <div class="row duplicate-row" id="duplicate-row">
                                     <div class="col-md-10 first" id="first">
                                         <div class="row">
                                             <div class="col-md-5 mt-2">
@@ -233,7 +233,7 @@
 
     $(document).ready(function(){
             $(".button").click(function(){
-            $('#first').clone().appendTo('#duplicate-row');
+            $('.first').clone().appendTo('.duplicate-row');
             });
             $(document).on('click', '#btn-remove' ,function(){
                 if($("#duplicate-row #first").length > 1)
