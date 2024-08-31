@@ -9,8 +9,12 @@ class Product extends Model
 {
     use HasFactory;
 
-    public function attributes(){
-        return $this->hasMany(Attribute::class , 'product_id');
+    // public function attributes(){
+    //  return $this->belongsToMany(Attribute::class , 'product_attribute_values','product_id');
+    // }
+    public function attributes()
+    {
+        return $this->belongsToMany(Attribute::class)->using(AttributeProduct::class)->withPivot('attribute_value_id');
     }
 
     public function categories()
@@ -28,9 +32,9 @@ class Product extends Model
         return $this->belongsTo(Brand::class , 'id' , 'brand_id');
     }
 
-    public function values()
-{
-     return $this->belongsToMany(AttributeValue::class , 'product_attribute_value','product_id');
-}
+    // public function values()
+    // {
+    //     return $this->belongsToMany(AttributeValue::class , 'product_attribute_values','product_id');
+    // }
 
 }

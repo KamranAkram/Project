@@ -33,7 +33,7 @@
                                 @foreach ($products as $product)
                                     <tr class="">
                                         <td scope="row">{{ $product->id }}</td>
-                                        <td>{{ $product->name }}</td>
+                                        <td>{{ $product->title }}</td>
                                         <td>{{ $product->slug }}</td>
                                         <td>{{ $product->description }}</td>
                                         <td>{{ $product->cat_id }}</td>
@@ -44,14 +44,14 @@
                                         <td>{{ $product->is_featured }}</td>
                                         <td>{{ $product->sku }}</td>
                                         <td>{{ $product->track_qty }}</td>
-                                        <td>{{ $product->quantity }}</td>
+                                        <td>{{ $product->qty}}</td>
                                         <td>{{ $product->status }}</td>
 
                                         <td>
-                                            <a href="#" class="text-info px-1">
+                                            <a href="{{route('admin.edit-product', $product->id)}}" class="text-info px-1">
                                                 <i data-feather="edit"></i>
                                             </a>
-                                            <a href="#" class="text-danger px-1">
+                                            <a href="{{route('admin.delete-product', $product->id)}}" class="text-danger px-1">
                                                 <i data-feather="trash"></i>
                                             </a>
                                         </td>

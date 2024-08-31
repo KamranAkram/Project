@@ -29,10 +29,10 @@
                                 <td>{{ $category->name }}</td>
                                 <td>{{ $category->slug }}</td>
                                 <td>
-                                    <a href="#" class="text-info px-1">
+                                    <a href="{{ route('admin.edit-category' ,$category->id) }}" class="text-info px-1">
 										<i data-feather="edit"></i>
 									</a>
-									<a href="#" class="text-danger px-1">
+									<a href="{{ route('admin.delete-category' ,$category->id) }}" class="text-danger px-1">
 										<i data-feather="trash"></i>
 									</a>
                                 </td>

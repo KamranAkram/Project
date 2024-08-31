@@ -64,17 +64,32 @@ class SubCategoryController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit($id)
     {
-        //
+        $data['subcategory'] = SubCategory::find($id);
+        $data['categories'] = Category::all();
+        return view('admin.update-subcat')->with($data);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'cat_id' => 'required',
+            'name' => 'required',
+            'slug' => 'required|unique:sub_categories',
+        ]);
+
+        $subCategory = SubCategory::find($id);
+
+        $subCategory->cat_id = $request['cat_id'];
+        $subCategory->name = $request['name'];
+        $subCategory->slug = $request['slug'];
+        $subCategory->save();
+
+        return redirect('/admin/add-sub-cat');
     }
 
     /**
@@ -82,6 +97,10 @@ class SubCategoryController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $value = SubCategory::find($id);
+        if(!is_null($value)){
+            $value->delete();
+        }
+        return redirect('/admin/show-subcat');
     }
 }

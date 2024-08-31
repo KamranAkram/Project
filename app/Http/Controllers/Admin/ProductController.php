@@ -32,7 +32,7 @@ class ProductController extends Controller
         $data['brands'] = Brand::orderBy('id','ASC')->get();
         $data['attributes'] = Attribute::orderBy('id','ASC')->get();
         $data['att_values'] = AttributeValue::orderBy('id','ASC')->get();
-        return view('admin.add-product')->with($data);
+        return view('admin.addProduct')->with($data);
     }
 
     /**
@@ -73,11 +73,10 @@ class ProductController extends Controller
             $product->cat_id = $request['cat_id'];
             $product->sub_cat_id = $request['sub_cat_id'];
             $product->brand_id = $request['brand_id'];
-            $product->attribute_id = $request['attribute_id'];
             $product->is_featured = $request['is_featured'];
             $product->save();
             $product->values()->attach($request->value_id);
-
+            $product->attributes()->attach($request->attribute_id);
 
             return response()->json([
                 'status' => true,
@@ -106,21 +105,21 @@ class ProductController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit($id)
     {
-        $data['products'] = Product::find($id);
+        $data['product'] = Product::find($id);
         $data['categories'] = Category::orderBy('id','ASC')->get();
         $data['sub_categories'] = SubCategory::orderBy('id','ASC')->get();
         $data['brands'] = Brand::orderBy('id','ASC')->get();
         $data['attributes'] = Attribute::orderBy('id','ASC')->get();
         $data['att_values'] = AttributeValue::orderBy('id','ASC')->get();
-        return view('admin.edit-product')->with($data);
+        return view('admin.update-product')->with($data);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
         $rules = [
             'title' => 'required',

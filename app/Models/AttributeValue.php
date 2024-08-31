@@ -9,12 +9,18 @@ class AttributeValue extends Model
 {
     use HasFactory;
 
-    public function attributes()
+    // public function attributes()
+    // {
+    //     return $this->belongsTo(Attribute::class);
+    // }
+    // public function products()
+    // {
+    //     return $this->belongsToMany(Product::class, 'product_attribute_value', 'attribute_value_id');
+    // }
+    protected $guarded = [];
+
+    public function attribute_product()
     {
-        return $this->belongsTo(Attribute::class);
-    }
-    public function products()
-    {
-        return $this->belongsToMany(Product::class, 'product_attribute_value', 'attribute_value_id');
+        return $this->hasMany(AttributeProduct::class, 'attribute_value_id');
     }
 }

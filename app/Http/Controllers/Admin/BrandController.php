@@ -55,9 +55,10 @@ class BrandController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit($id)
     {
-        //
+        $data['brand'] = Brand::find($id);
+        return view('admin.update-brand')->with($data);
     }
 
     /**
@@ -65,14 +66,29 @@ class BrandController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+            'slug' => 'required|unique:brands',
+        ]);
+
+        $brand = Brand::find($id);
+
+        $brand->name = $request['name'];
+        $brand->slug = $request['slug'];
+        $brand->save();
+
+        return redirect('/admin/show-brand');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        //
+        $value = Brand::find($id);
+        if(!is_null($value)){
+            $value->delete();
+        }
+        return redirect('/admin/show-brand');
     }
 }

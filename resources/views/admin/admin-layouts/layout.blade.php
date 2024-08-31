@@ -352,28 +352,7 @@
 
     @yield('customJS')
 
-    <script>
-        Dropzone.autoDiscover = false;
-        $(function () {
-            // Summernote
-            $('.summernote').summernote({
-                height: '300px'
-            });
 
-            const dropzone = $("#image").dropzone({
-                url:  "{{route('admin.add-product')}}",
-                maxFiles: 5,
-                addRemoveLinks: true,
-                acceptedFiles: "image/jpeg,image/png,image/gif",
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
-                }, success: function(file, response){
-                    $("#image_id").val(response.id);
-                }
-            });
-
-        });
-    </script>
 
     <script>
         $('#name').change(function(){

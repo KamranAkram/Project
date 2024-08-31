@@ -56,17 +56,29 @@ class CategoryController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit($id)
     {
-        //
+        $data['category'] = Category::find($id);
+        return view('admin.update-category')->with($data);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+            'slug' => 'required|unique:categories',
+        ]);
+
+        $category = Category::find($id);
+
+        $category->name = $request['name'];
+        $category->slug = $request['slug'];
+        $category->save();
+
+        return redirect('/admin/add-category');
     }
 
     /**
@@ -74,6 +86,10 @@ class CategoryController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $value = Category::find($id);
+        if(!is_null($value)){
+            $value->delete();
+        }
+        return redirect('/admin/show-category');
     }
 }

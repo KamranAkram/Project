@@ -77,7 +77,9 @@
                 <div class="row d-flex justify-content-center">
                     <div class="col-lg-8">
                         <div class="product__details__text">
-                            <h4>Hooded thermal anorak</h4>
+                            {{-- <h4>{{ $products->title }}</h4> --}}
+                            <h6>{{ $products->slug }}</h6>
+
                             <div class="rating">
                                 <i class="fa fa-star"></i>
                                 <i class="fa fa-star"></i>
@@ -86,7 +88,7 @@
                                 <i class="fa fa-star-o"></i>
                                 <span> - 5 Reviews</span>
                             </div>
-                            <h3>$270.00 <span>70.00</span></h3>
+                            <h3>${{ $products->price }} <span>${{ $products->compare_price }}</span></h3>
                             <p>Coat with quilted lining and an adjustable hood. Featuring long sleeves with adjustable
                                 cuff tabs, adjustable asymmetric hem with elastic side tabs and a front zip fastening
                             with placket.</p>
@@ -141,9 +143,11 @@
                                 <h5><span>Guaranteed Safe Checkout</span></h5>
                                 <img src="{{ asset('frontend/img/shop-details/details-payment.png')}}" alt="">
                                 <ul>
-                                    <li><span>SKU:</span> 3812912</li>
-                                    <li><span>Categories:</span> Clothes</li>
-                                    <li><span>Tag:</span> Clothes, Skin, Body</li>
+                                    <li><span>SKU:</span> {{ $products->sku }}</li>
+                                    <li><span>Category:</span> {{ $products->categoryName }}</li>
+                                    {{-- <li><span>Sub-Category:</span> {{ $products->name }}</li> --}}
+                                    <li><span>Brand:</span> {{ $products->brandName }}</li>
+
                                 </ul>
                             </div>
                         </div>
@@ -428,3 +432,81 @@
     <!-- Related Section End -->
 
 @endsection
+
+
+{{-- <!doctype html>
+<html lang="en">
+    <head>
+        <title>Title</title>
+        <meta charset="utf-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, shrink-to-fit=no"
+        />
+
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+            crossorigin="anonymous"
+        />
+    </head>
+
+    <body>
+<div
+    class="table-responsive"
+>
+    <table
+        class="table table-primary"
+    >
+        <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Name</th>
+                <th scope="col">Slug</th>
+                <th scope="col">Price</th>
+                <th scope="col">Compare Price</th>
+                <th scope="col">SKU</th>
+                <th scope="col">Category</th>
+                <th scope="col">SubCategory</th>
+                <th scope="col">Brand</th>
+
+
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach ($products as $product)
+            <tr class="">
+                <td scope="col">{{ $product->id }}</td>
+                <td scope="col">{{ $product->title }}</td>
+                <td scope="col">{{ $product->slug }}</td>
+                <td scope="col">{{ $product->price }}</td>
+                <td scope="col">{{ $product->compare_price }}</td>
+                <td scope="col">{{ $product->sku }}</td>
+                <td scope="col">{{ $product->categoryName }}</td>
+                <td scope="col">{{ $product->subCatName }}</td>
+                <td scope="col">{{ $product->brandName }}</td>
+            </tr>
+            @endforeach
+
+        </tbody>
+    </table>
+</div>
+
+
+
+        <script
+            src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+            integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+            crossorigin="anonymous"
+        ></script>
+
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+            integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+            crossorigin="anonymous"
+        ></script>
+    </body>
+</html>
+ --}}

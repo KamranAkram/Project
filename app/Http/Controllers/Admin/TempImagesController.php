@@ -5,9 +5,13 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\TempImage;
 use Illuminate\Http\Request;
-use Nette\Utils\Image;
+// use Intervention\Image\Image;
+// use Intervention\Image\ImageManager;
+// use Intervention\Image\Drivers\Gd\Driver;
+// use Intervention\Image\Laravel\Facades\Image;
+// config/packages/intervention_image.yaml
 
-use function Pest\Laravel\json;
+// use function Pest\Laravel\json;
 
 class TempImagesController extends Controller
 {
@@ -20,20 +24,24 @@ class TempImagesController extends Controller
             $file = time() . '.' . $ext;
 
             $tempImage = new TempImage;
-            $tempImage->image = $file;
+            $tempImage->name = $file;
             $tempImage->save();
 
             $image->move(public_path(). '/temp' , $file);
 
+            // Generating Thumbnail
             $sourcePath = public_path(). ' /temp/ '. $file;
-            $image = Image::make($sourcePath);
-            $image->fit(300,300);
+            $destPath = public_path(). ' /temp/thumb/ '. $file;
+            // $image = Image::make($sourcePath);
+            $image->resize(300,275);
+            $image->save($destPath);
 
 
 
             return response()->json([
                 "status" => true,
                 "image_id" => $tempImage->id,
+                "ImagePath" => asset('/temp/thumb/'. $file),
                 "message" =>"Image Uploaded Successfully"
             ]);
         }

@@ -21,7 +21,6 @@ return new class extends Migration
             $table->foreignId('cat_id')->nullable()->constrained('categories')->onDelete('cascade');
             $table->foreignId('sub_cat_id')->nullable()->constrained('sub_categories')->onDelete('cascade');
             $table->foreignId('brand_id')->nullable()->constrained('brands')->onDelete('cascade');
-            $table->foreignId('attribute_id')->nullable()->constrained('attributes')->onDelete('cascade');
             $table->enum('is_featured',['Yes' , 'No'])->default('No');
             $table->string('sku');
             $table->enum('track_qty',['Yes' , 'No'])->default('Yes');

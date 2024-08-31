@@ -31,10 +31,10 @@
                                 <td>{{ $value->name }}</td>
                                 <td>{{ $value->slug }}</td>
                                 <td>
-                                    <a href="#" class="text-info px-1">
+                                    <a href="{{route('admin.edit-subcat', $value->id)}}" class="text-info px-1">
 										<i data-feather="edit"></i>
 									</a>
-									<a href="#" class="text-danger px-1">
+									<a href="{{ route('admin.delete-subcat' ,$value->id) }}" class="text-danger px-1">
 										<i data-feather="trash"></i>
 									</a>
                                 </td>

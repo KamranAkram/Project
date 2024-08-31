@@ -29,10 +29,10 @@
                                 <td>{{ $brand->name }}</td>
                                 <td>{{ $brand->slug }}</td>
                                 <td>
-                                    <a href="#" class="text-info px-1">
+                                    <a href="{{ route('admin.edit-brand' , $brand->id) }}" class="text-info px-1">
 										<i data-feather="edit"></i>
 									</a>
-									<a href="#" class="text-danger px-1">
+									<a href="{{ route('admin.delete-brand' , $brand->id) }}" class="text-danger px-1">
 										<i data-feather="trash"></i>
 									</a>
                                 </td>
