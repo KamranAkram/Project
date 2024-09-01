@@ -12,10 +12,7 @@ class Product extends Model
     // public function attributes(){
     //  return $this->belongsToMany(Attribute::class , 'product_attribute_values','product_id');
     // }
-    public function attributes()
-    {
-        return $this->belongsToMany(Attribute::class)->using(AttributeProduct::class)->withPivot('attribute_value_id');
-    }
+
 
     public function categories()
     {
@@ -36,5 +33,9 @@ class Product extends Model
     // {
     //     return $this->belongsToMany(AttributeValue::class , 'product_attribute_values','product_id');
     // }
-
+    public function attributes()
+    {
+        return $this->belongsToMany(Attribute::class, 'attribute_product')
+                    ->withPivot('attribute_value_id');
+    }
 }

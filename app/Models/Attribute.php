@@ -18,6 +18,7 @@ class Attribute extends Model
     // }
     public function products()
     {
-        return $this->belongsToMany(Product::class)->using(AttributeProduct::class)->withPivot('attribute_value_id');
+        return $this->belongsToMany(Product::class, 'attribute_product')
+                    ->withPivot('attribute_value_id');
     }
 }

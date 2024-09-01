@@ -61,10 +61,10 @@
                                 </div>
                                 <div class="row duplicate-row" id="duplicate-row">
                                     <div class="col-md-10 first" id="first">
-                                        <div class="row">
+                                        <div class="row first">
                                             <div class="col-md-5 mt-2">
                                                 <label for="attribute">Attribute Name</label>
-                                                <select id="attribute" class="form-control" name="attribute_id[]">
+                                                <select id="attribute" class="form-control attribute-select" name="attribute_id[]">
                                                     <option value="">Select an Attribute</option>
                                                     @foreach ($attributes as $attribute)
                                                         <option value="{{ $attribute->id }}">{{ $attribute->name }}</option>
@@ -72,16 +72,15 @@
                                                 </select>
                                                 <p class="error"></p>
                                             </div>
-
+                                        
                                             <div class="col-md-5 mt-2">
                                                 <label for="value">Attribute Value</label>
-                                                <select id="value" class="form-select" name="value_id[]" multiple
-                                                    aria-label="multiple select">
+                                                <select id="value" class="form-select value-select" name="value_id[]" multiple aria-label="multiple select">
                                                     <option value="">Select the Attribute Values</option>
                                                 </select>
                                                 <p class="error"></p>
                                             </div>
-
+                                        
                                             <div class="col-md-2 mt-5 remove"></div>
                                         </div>
                                     </div>
@@ -222,50 +221,53 @@
 
 <script>
     $(document).ready(function() {
-    // Function to handle fetching attribute values based on the selected attribute
-    function fetchAttributeValues(attributeSelect) {
-        var attribute_id = $(attributeSelect).val();
-        var valueSelect = $(attributeSelect).closest('.row').find('select[name="value_id[]"]');
+        // Function to handle fetching attribute values based on the selected attribute
+        function fetchAttributeValues(attributeSelect) {
+            var attribute_id = $(attributeSelect).val();
+            var valueSelect = $(attributeSelect).closest('.row').find('.value-select');
 
-        $.ajax({
-            type: "get",
-            url: "{{ route('admin.product-value') }}",
-            data: { attribute_id: attribute_id },
-            dataType: "json",
-            success: function(response) {
-                valueSelect.find("option").not(":first").remove(); // Clear previous options
-                $.each(response["att_values"], function(key, item) {
-                    valueSelect.append(`<option value='${item.id}'>${item.value}</option>`);
-                });
-            },
-            error: function() {
-                console.log("Something Went Wrong");
-            }
+            // Update the name attribute of the value select based on the selected attribute_id
+            valueSelect.attr('name', 'value_id[' + attribute_id + '][]');
+
+            $.ajax({
+                type: "get",
+                url: "{{ route('admin.product-value') }}",
+                data: { attribute_id: attribute_id },
+                dataType: "json",
+                success: function(response) {
+                    valueSelect.find("option").not(":first").remove(); // Clear previous options
+                    $.each(response["att_values"], function(key, item) {
+                        valueSelect.append(`<option value='${item.id}'>${item.value}</option>`);
+                    });
+                },
+                error: function() {
+                    console.log("Something Went Wrong");
+                }
+            });
+        }
+
+        // Initial event binding for the first row
+        $(document).on('change', '.attribute-select', function() {
+            fetchAttributeValues(this);
         });
-    }
 
-    // Initial event binding for the first row
-    $('#attribute').change(function() {
-        fetchAttributeValues(this);
-    });
+        // Add More button functionality
+        $("#addmorebtn").click(function() {
+            var newRow = $('.first').first().clone(); // Clone the first row
 
-    // Add More button functionality
-    $("#addmorebtn").click(function() {
-        var newRow = $('.first').first().clone(); // Clone the first row
+            // Reset the values in the cloned row
+            newRow.find('select').val('');
+            newRow.find('.error').html('');
 
-        // Reset the values in the cloned row
-        newRow.find('select').val('');
-        newRow.find('.error').html('');
+            // Add the remove button only in the cloned rows
+            newRow.find('.remove').html('<button type="button" class="btn btn-danger btn-remove">Remove</button>');
 
-        // Add the remove button only in the cloned rows
-        newRow.find('.remove').html('<button type="button" class="btn btn-danger btn-remove">Remove</button>');
-
-        // Append the new row
-        $('.duplicate-row').append(newRow);
+            // Append the new row
+            $('.duplicate-row').append(newRow);
 
             // Rebind the change event to the new attribute select
-        newRow.find('#attribute').change(function() {
-            fetchAttributeValues(this);
+            newRow.find('.attribute-select').change(function() {
+                fetchAttributeValues(this);
             });
         });
 
@@ -273,7 +275,12 @@
         $(document).on('click', '.btn-remove', function() {
             $(this).closest('.first').remove();
         });
-    });
 
+        // Bind the change event for the initial attribute select element
+        $('#attribute').change(function() {
+            fetchAttributeValues(this);
+        });
+    });
 </script>
+
 @endsection
