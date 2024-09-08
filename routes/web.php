@@ -47,7 +47,7 @@ require __DIR__.'/auth.php';
 Route::get('/' , [HomeController::class, 'index'])->name('index');
 Route::get('/about' , [AboutController::class, 'index'])->name('about');
 Route::get('/shop' , [ShopController::class, 'index'])->name('shop');
-Route::get('product/{productId}/{slug}', [ShopController::class, 'product'])->name('detail');
+Route::get('product/{id}/{slug}', [ShopController::class, 'product'])->name('detail');
 Route::get('/contact' , [ContactController::class, 'index'])->name('contact');
 Route::post('/contact' , [ContactController::class, 'store'])->name('store-contact');
 Route::get('/cart' , [CartController::class, 'index'])->name('cart');

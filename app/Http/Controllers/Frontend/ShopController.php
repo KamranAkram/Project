@@ -32,11 +32,15 @@ class ShopController extends Controller
     //     return view('frontend.shop-details')->with($data);
     // }
 
-    public function product(int $id ,string $slug){
-        $data['product'] = Product::where([
-            $id => 'productId',
-            $slug => 'slug'])->get();
+    public function product($id, $slug)
+    {
+        $data['product'] = Product::where('id', $id)
+            ->where('slug', $slug)
+            ->first(); 
+    
         $data['products'] = Product::all();
+    
         return view('frontend.shop-details')->with($data);
     }
+    
 }

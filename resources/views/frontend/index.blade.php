@@ -112,7 +112,7 @@
                                 <ul class="product__hover">
                                     <li><a href="#"><img src="{{asset('frontend/img/icon/heart.png')}}" alt=""></a></li>
                                     <li><a href="#"><img src="{{asset('frontend/img/icon/compare.png')}}" alt=""> <span>Compare</span></a></li>
-                                    <li><a href="{{ route('detail' , $product->slug) }}"><img src="{{asset('frontend/img/icon/search.png')}}" alt=""></a></li>
+                                    <li><a href="{{ route('detail' , [$product->id , $product->slug]) }}"><img src="{{asset('frontend/img/icon/search.png')}}" alt=""></a></li>
                                 </ul>
                             </div>
                             <div class="product__item__text">
