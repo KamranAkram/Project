@@ -16,19 +16,27 @@ class ShopController extends Controller
         return view('frontend.shop')->with($data);
     }
 
-    public function singleProduct($id){
-        // $data['product'] = Product::find($id);
-        // $data['all_products'] = Product::all();
-        // $data['categories'] = Category::all();
-        // $subCategories = SubCategory::select('sub_categories.*', 'categories.name as categoryName')
-        //                     ->orderBy('sub_categories.id')
-        //                     ->leftJoin('categories' , 'categories.id' , 'sub_categories.cat_id');
-        $products = DB::table('products')
-                        ->select('products.*' , 'categories.name as categoryName' , 'sub_categories.name as subCatName' , 'brands.name as brandName')
-                        ->leftJoin('categories' , 'categories.id' , 'products.cat_id')
-                        ->leftJoin('sub_categories' , 'sub_categories.id' , 'products.sub_cat_id')
-                        ->leftJoin('brands' , 'brands.id' , 'products.brand_id')
-                        ->get();
-        return view('frontend.shop-details', ['products' => $products]);
+    // public function singleProduct($id){
+    //     $data['products'] = Product::find($id);
+    //     // $data['all_products'] = Product::all();
+    //     // $data['categories'] = Category::all();
+    //     // $subCategories = SubCategory::select('sub_categories.*', 'categories.name as categoryName')
+    //     //                     ->orderBy('sub_categories.id')
+    //     //                     ->leftJoin('categories' , 'categories.id' , 'sub_categories.cat_id');
+    //     $data['products'] = DB::table('products')
+    //                     ->select('products.*' , 'categories.name as categoryName' , 'sub_categories.name as subCatName' , 'brands.name as brandName')
+    //                     ->leftJoin('categories' , 'categories.id' , 'products.cat_id')
+    //                     ->leftJoin('sub_categories' , 'sub_categories.id' , 'products.sub_cat_id')
+    //                     ->leftJoin('brands' , 'brands.id' , 'products.brand_id')
+    //                     ->get();
+    //     return view('frontend.shop-details')->with($data);
+    // }
+
+    public function product(int $id ,string $slug){
+        $data['product'] = Product::where([
+            $id => 'productId',
+            $slug => 'slug'])->get();
+        $data['products'] = Product::all();
+        return view('frontend.shop-details')->with($data);
     }
 }

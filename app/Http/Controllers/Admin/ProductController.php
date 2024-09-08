@@ -10,8 +10,9 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\SubCategory;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\UploadedFile;
+// use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
@@ -28,11 +29,11 @@ class ProductController extends Controller
      */
     public function create()
     {
-        $data['categories'] = Category::orderBy('id', 'ASC')->get();
-        $data['sub_categories'] = SubCategory::orderBy('id', 'ASC')->get();
-        $data['brands'] = Brand::orderBy('id', 'ASC')->get();
-        $data['attributes'] = Attribute::orderBy('id', 'ASC')->get();
-        $data['att_values'] = AttributeValue::orderBy('id', 'ASC')->get();
+        $data['categories'] = Category::orderBy('id','ASC')->get();
+        $data['sub_categories'] = SubCategory::orderBy('id','ASC')->get();
+        $data['brands'] = Brand::orderBy('id','ASC')->get();
+        $data['attributes'] = Attribute::orderBy('id','ASC')->get();
+        $data['att_values'] = AttributeValue::orderBy('id','ASC')->get();
         return view('admin.addProduct')->with($data);
     }
 
@@ -41,9 +42,11 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
+        // @dd($request->all());
         $rules = [
             'title' => 'required',
-            'slug' => 'required',
+            'slug' => 'required|unique:products',
+            'images' => 'required',
             'price' => 'required|numeric',
             'sku' => 'required|unique:products',
             'track_qty' => 'required|in:Yes,No',
@@ -51,16 +54,27 @@ class ProductController extends Controller
             'is_featured' => 'required|in:Yes,No',
 
         ];
-        // @dd($request->all());
 
-        if (!empty($request->track_qty) && $request->track_qty == 'Yes') {
+        if(!empty($request->track_qty) && $request->track_qty == 'Yes'){
             $rules['qty'] = 'required|numeric';
         }
 
-        $validator = Validator::make($request->all(), $rules);
-        if ($validator->passes()) {
+        $validator = Validator::make($request->all(),$rules);
+
+        if($validator->passes()){
             $product = new Product;
 
+            // $image = array();
+            // if($files = $request->file('images')){
+            //     foreach($files as $file){
+            //         $ext = time() . "product." . $file->getClientOriginalExtension();
+            //         $upload_path = 'product_images/';
+            //         $image_url = $upload_path.$ext;
+            //         $file->move($upload_path,$ext);
+            //         $images[] = $image_url;
+            //     }
+            // }
+            // $product->image = implode('|' , $images);
             $product->title = $request['title'];
             $product->slug = $request['slug'];
             $product->description = $request['description'];
@@ -75,34 +89,32 @@ class ProductController extends Controller
             $product->brand_id = $request['brand_id'];
             $product->is_featured = $request['is_featured'];
             $product->save();
-
-
-            $product_id = $product->id;
-            $attribute_ids = $request['attribute_id'];
-            $value_ids = $request['value_id'];
-
-            $pivotData = [];
-
-            foreach ($attribute_ids as $index => $attribute_id) {
-                if (isset($value_ids[$attribute_id])) {
-                    foreach ($value_ids[$attribute_id] as $value_id) {
-                        $pivotData[] = [
-                            'product_id' => $product_id,
-                            'attribute_id' => $attribute_id,
-                            'attribute_value_id' => $value_id,
-                        ];
-                    }
-                }
-            }
-
-            DB::table('attribute_product')->insert($pivotData);
+            $product->values()->attach($request->value_id);
+            $product->attributes()->attach($request->attribute_id);
+            // Product::insert([
+            //     'image'=> implode('|' , $images),
+            //     'title' => $request->title,
+            //     'slug' => $request->slug,
+            //     'description' => $request->description,
+            //     'price' => $request->price,
+            //     'compare_price' => $request->compare_price,
+            //     'sku' => $request->sku,
+            //     'track_qty' => $request->track_qty,
+            //     'qty' => $request->qty,
+            //     'status' => $request->status,
+            //     'cat_id' => $request->cat_id,
+            //     'sub_cat_id' => $request->sub_cat_id,
+            //     'brand_id' => $request->brand_id,
+            //     'is_featured' => $request->is_featured,
+            // ]);
 
 
             return response()->json([
                 'status' => true,
                 'message' => 'Product Added Successfully',
             ]);
-        } else {
+
+        }else{
             return response()->json([
                 'status' => false,
                 'errors' => $validator->errors(),
@@ -117,8 +129,12 @@ class ProductController extends Controller
      */
     public function show()
     {
-        $products = Product::orderBy('id')->paginate(10);
-        return view('admin.product', compact('products'));
+        $products = Product::select('products.*' , 'categories.name as categoryName' , 'sub_categories.name as subCatName' , 'brands.name as brandName')
+                        ->leftJoin('categories' , 'categories.id' , 'products.cat_id')
+                        ->leftJoin('sub_categories' , 'sub_categories.id' , 'products.sub_cat_id')
+                        ->leftJoin('brands' , 'brands.id' , 'products.brand_id');
+        $products = $products->paginate(10);
+        return view('admin.product' , compact('products'));
     }
 
     /**
@@ -127,11 +143,11 @@ class ProductController extends Controller
     public function edit($id)
     {
         $data['product'] = Product::find($id);
-        $data['categories'] = Category::orderBy('id', 'ASC')->get();
-        $data['sub_categories'] = SubCategory::orderBy('id', 'ASC')->get();
-        $data['brands'] = Brand::orderBy('id', 'ASC')->get();
-        $data['attributes'] = Attribute::orderBy('id', 'ASC')->get();
-        $data['att_values'] = AttributeValue::orderBy('id', 'ASC')->get();
+        $data['categories'] = Category::orderBy('id','ASC')->get();
+        $data['sub_categories'] = SubCategory::orderBy('id','ASC')->get();
+        $data['brands'] = Brand::orderBy('id','ASC')->get();
+        $data['attributes'] = Attribute::orderBy('id','ASC')->get();
+        $data['att_values'] = AttributeValue::orderBy('id','ASC')->get();
         return view('admin.update-product')->with($data);
     }
 
@@ -142,22 +158,22 @@ class ProductController extends Controller
     {
         $rules = [
             'title' => 'required',
-            'slug' => 'required|unique:products',
+            'slug' => 'required',
             'price' => 'required|numeric',
-            'sku' => 'required|unique:products',
+            'sku' => 'required',
             'track_qty' => 'required|in:Yes,No',
             'cat_id' => 'required|numeric',
             'is_featured' => 'required|in:Yes,No',
 
         ];
 
-        if (!empty($request->track_qty) && $request->track_qty == 'Yes') {
+        if(!empty($request->track_qty) && $request->track_qty == 'Yes'){
             $rules['qty'] = 'required|numeric';
         }
 
-        $validator = Validator::make($request->all(), $rules);
+        $validator = Validator::make($request->all(),$rules);
 
-        if ($validator->passes()) {
+        if($validator->passes()){
             $product = Product::find($id);
 
             $product->title = $request['title'];
@@ -182,7 +198,8 @@ class ProductController extends Controller
                 'status' => true,
                 'message' => 'Product Added Successfully',
             ]);
-        } else {
+
+        }else{
             return response()->json([
                 'status' => false,
                 'errors' => $validator->errors(),
@@ -198,7 +215,7 @@ class ProductController extends Controller
     public function destroy(string $id)
     {
         $value = Product::find($id);
-        if (!is_null($value)) {
+        if(!is_null($value)){
             $value->delete();
         }
         return redirect('/admin/show-product');

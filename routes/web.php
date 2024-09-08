@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\HomeController;
 use App\Http\Controllers\Admin\ProductAttributeController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\ProductImagesController;
 use App\Http\Controllers\Admin\ProductSubCategoryController;
 use App\Http\Controllers\Admin\SubCategoryController;
 use App\Http\Controllers\Admin\TempImagesController;
@@ -46,7 +47,7 @@ require __DIR__.'/auth.php';
 Route::get('/' , [HomeController::class, 'index'])->name('index');
 Route::get('/about' , [AboutController::class, 'index'])->name('about');
 Route::get('/shop' , [ShopController::class, 'index'])->name('shop');
-Route::get('/single-product/{id}', [ShopController::class, 'singleProduct'])->name('single');
+Route::get('product/{productId}/{slug}', [ShopController::class, 'product'])->name('detail');
 Route::get('/contact' , [ContactController::class, 'index'])->name('contact');
 Route::post('/contact' , [ContactController::class, 'store'])->name('store-contact');
 Route::get('/cart' , [CartController::class, 'index'])->name('cart');
@@ -140,6 +141,8 @@ Route::prefix('admin')->name('admin.')->group(function(){
         Route::get('/show-product' , [ProductController::class, 'show'])->name('show-product');
         Route::get('/product/delete/{id}', [ProductController::class, 'destroy'])->name('delete-product');
         Route::post('/upload-temp-image' , [TempImagesController::class, 'create'])->name('temp-images.create');
+        Route::get('/product/{id}/upload', [ProductImagesController::class, 'index'])->name('image-product');
+        Route::post('/product/{id}/upload', [ProductImagesController::class, 'store'])->name('store-images');
 
     });
 

@@ -209,15 +209,23 @@
                     <div class="row">
                         @if ($products->isNotEmpty())
                             @foreach ($products as $product)
+                            {{-- @php
+                            $productImage = $product->product_images->first();
+                            @endphp --}}
+
                                 <div class="col-lg-4 col-md-6 col-sm-6">
                                     <div class="product__item sale">
-                                        <div class="product__item__pic set-bg" data-target="{{ route('single', $product->id) }}" data-setbg="{{ asset('frontend/img/product/product-6.jpg')}}">
+                                        @if (!empty($productImage->image))
+                                        <div class="product__item__pic set-bg" data-setbg="{{ asset('uploads/products/' . $productImage->image)}}">
+                                        @else
+                                        <div class="product__item__pic set-bg" data-setbg="{{ asset('frontend/img/product/product-6.jpg')}}">
+                                        @endif
                                             <span class="label">Sale</span>
                                             <ul class="product__hover">
                                                 <li><a href=""><img src="{{ asset('frontend/img/icon/heart.png')}}" alt=""></a></li>
                                                 <li><a href="#"><img src="{{ asset('frontend/img/icon/compare.png')}}" alt=""> <span>Compare</span></a>
                                                 </li>
-                                                <li><a href="{{ route('single', $product->id) }}"><img src="{{ asset('frontend/img/icon/search.png')}}" alt=""></a></li>
+                                                <li><a href="{{ route('detail', ['productId'=> $product->id , 'slug' => $product->slug ]) }}"><img src="{{ asset('frontend/img/icon/search.png')}}" alt=""></a></li>
                                             </ul>
                                         </div>
                                         <div class="product__item__text">
@@ -249,7 +257,7 @@
                                     </div>
                                 </div>
                             @endforeach
-                            @else
+                        @else
                             <div class="alert alert-danger">No Product Found</div>
                         @endif
 
@@ -272,3 +280,35 @@
     </section>
     <!-- Shop Section End -->
 @endsection
+
+
+{{-- <script>
+    $(document).ready(function(){
+        $('.addToCartBtn').click(function (e) {
+            e.preventDefault();
+
+            var product_id = $(this).closest('.product_data').find('.product_id').val();
+            var quantity = $(this).closest('.product_data').find('.qty-input').val();
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $.ajax({
+                type: "POST",
+                url: "/add-to-cart/" + product_id + "/" +quantity,
+                // method: "PATCH",
+                data: {
+                    'product_id' : product_id,
+                    'quantity' : quantity,
+                },
+                success: function (response) {
+                    alert(response.status);
+                    // console.log(response.data);
+                }
+            });
+        });
+
+    });
+
+</script> --}}

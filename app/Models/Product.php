@@ -9,6 +9,8 @@ class Product extends Model
 {
     use HasFactory;
 
+    protected $primaryKey = 'id';
+
     // public function attributes(){
     //  return $this->belongsToMany(Attribute::class , 'product_attribute_values','product_id');
     // }
@@ -37,5 +39,10 @@ class Product extends Model
     {
         return $this->belongsToMany(Attribute::class, 'attribute_product')
                     ->withPivot('attribute_value_id');
+    }
+
+    public function productImages()
+    {
+        return $this->hasMany(ProductImage::class, 'id' , 'product_id');
     }
 }

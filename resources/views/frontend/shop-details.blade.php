@@ -10,7 +10,7 @@
                         <div class="product__details__breadcrumb">
                             <a href="{{ route('index') }}">Home</a>
                             <a href="{{ route('shop') }}">Shop</a>
-                            <span>Product Details</span>
+                            <span>{{ $product->title }}</span>
                         </div>
                     </div>
                 </div>
@@ -76,81 +76,78 @@
             <div class="container">
                 <div class="row d-flex justify-content-center">
                     <div class="col-lg-8">
-                        <div class="product__details__text">
-                            {{-- <h4>{{ $products->title }}</h4> --}}
-                            <h6>{{ $products->slug }}</h6>
+                            <div class="product__details__text">
+                                <h4>{{ $product->title }}</h4>
+                                <h6>{{ $product->slug }}</h6>
 
-                            <div class="rating">
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star-o"></i>
-                                <span> - 5 Reviews</span>
-                            </div>
-                            <h3>${{ $products->price }} <span>${{ $products->compare_price }}</span></h3>
-                            <p>Coat with quilted lining and an adjustable hood. Featuring long sleeves with adjustable
-                                cuff tabs, adjustable asymmetric hem with elastic side tabs and a front zip fastening
-                            with placket.</p>
-                            <div class="product__details__option">
-                                <div class="product__details__option__size">
-                                    <span>Size:</span>
-                                    <label for="xxl">xxl
-                                        <input type="radio" id="xxl">
-                                    </label>
-                                    <label class="active" for="xl">xl
-                                        <input type="radio" id="xl">
-                                    </label>
-                                    <label for="l">l
-                                        <input type="radio" id="l">
-                                    </label>
-                                    <label for="sm">s
-                                        <input type="radio" id="sm">
-                                    </label>
+                                <div class="rating">
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star-o"></i>
+                                    <span> - 5 Reviews</span>
                                 </div>
-                                <div class="product__details__option__color">
-                                    <span>Color:</span>
-                                    <label class="c-1" for="sp-1">
-                                        <input type="radio" id="sp-1">
-                                    </label>
-                                    <label class="c-2" for="sp-2">
-                                        <input type="radio" id="sp-2">
-                                    </label>
-                                    <label class="c-3" for="sp-3">
-                                        <input type="radio" id="sp-3">
-                                    </label>
-                                    <label class="c-4" for="sp-4">
-                                        <input type="radio" id="sp-4">
-                                    </label>
-                                    <label class="c-9" for="sp-9">
-                                        <input type="radio" id="sp-9">
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="product__details__cart__option">
-                                <div class="quantity">
-                                    <div class="pro-qty">
-                                        <input type="text" value="1">
+                                <h3>${{ $product->price }} <span>${{ $product->compare_price }}</span></h3>
+                                <p>Coat with quilted lining and an adjustable hood. Featuring long sleeves with adjustable
+                                    cuff tabs, adjustable asymmetric hem with elastic side tabs and a front zip fastening
+                                with placket.</p>
+                                <div class="product__details__option">
+                                    <div class="product__details__option__size">
+                                        <span>Size:</span>
+                                        <label for="xxl">xxl
+                                            <input type="radio" id="xxl">
+                                        </label>
+                                        <label class="active" for="xl">xl
+                                            <input type="radio" id="xl">
+                                        </label>
+                                        <label for="l">l
+                                            <input type="radio" id="l">
+                                        </label>
+                                        <label for="sm">s
+                                            <input type="radio" id="sm">
+                                        </label>
+                                    </div>
+                                    <div class="product__details__option__color">
+                                        <span>Color:</span>
+                                        <label class="c-1" for="sp-1">
+                                            <input type="radio" id="sp-1">
+                                        </label>
+                                        <label class="c-2" for="sp-2">
+                                            <input type="radio" id="sp-2">
+                                        </label>
+                                        <label class="c-3" for="sp-3">
+                                            <input type="radio" id="sp-3">
+                                        </label>
+                                        <label class="c-4" for="sp-4">
+                                            <input type="radio" id="sp-4">
+                                        </label>
+                                        <label class="c-9" for="sp-9">
+                                            <input type="radio" id="sp-9">
+                                        </label>
                                     </div>
                                 </div>
-                                <a href="#" class="primary-btn">add to cart</a>
+                                <div class="product__details__cart__option">
+                                    <div class="quantity">
+                                        <div class="pro-qty">
+                                            <input type="number" value="1">
+                                        </div>
+                                    </div>
+                                    <a href="#" class="primary-btn">add to cart</a>
+                                </div>
+                                <div class="product__details__btns__option">
+                                    <a href="#"><i class="fa fa-heart"></i> add to wishlist</a>
+                                    <a href="#"><i class="fa fa-exchange"></i> Add To Compare</a>
+                                </div>
+                                <div class="product__details__last__option">
+                                    <h5><span>Guaranteed Safe Checkout</span></h5>
+                                    <img src="{{ asset('frontend/img/shop-details/details-payment.png')}}" alt="">
+                                    <ul>
+                                        <li><span>SKU:</span> {{ $product->sku }}</li>
+                                    </ul>
+                                </div>
                             </div>
-                            <div class="product__details__btns__option">
-                                <a href="#"><i class="fa fa-heart"></i> add to wishlist</a>
-                                <a href="#"><i class="fa fa-exchange"></i> Add To Compare</a>
-                            </div>
-                            <div class="product__details__last__option">
-                                <h5><span>Guaranteed Safe Checkout</span></h5>
-                                <img src="{{ asset('frontend/img/shop-details/details-payment.png')}}" alt="">
-                                <ul>
-                                    <li><span>SKU:</span> {{ $products->sku }}</li>
-                                    <li><span>Category:</span> {{ $products->categoryName }}</li>
-                                    {{-- <li><span>Sub-Category:</span> {{ $products->name }}</li> --}}
-                                    <li><span>Brand:</span> {{ $products->brandName }}</li>
 
-                                </ul>
-                            </div>
-                        </div>
                     </div>
                 </div>
                 <div class="row">
@@ -287,6 +284,7 @@
                 </div>
             </div>
             <div class="row">
+                @foreach ($products as $product)
                 <div class="col-lg-3 col-md-6 col-sm-6 col-sm-6">
                     <div class="product__item">
                         <div class="product__item__pic set-bg" data-setbg="{{ asset('frontend/img/product/product-1.jpg')}}">
@@ -294,11 +292,11 @@
                             <ul class="product__hover">
                                 <li><a href="#"><img src="{{ asset('frontend/img/icon/heart.png')}}" alt=""></a></li>
                                 <li><a href="#"><img src="{{ asset('frontend/img/icon/compare.png')}}" alt=""> <span>Compare</span></a></li>
-                                <li><a href="#"><img src="{{ asset('frontend/img/icon/search.png')}}" alt=""></a></li>
+                                <li><a href="{{ route('detail' , $product->slug) }}"><img src="{{ asset('frontend/img/icon/search.png')}}" alt=""></a></li>
                             </ul>
                         </div>
                         <div class="product__item__text">
-                            <h6>Piqué Biker Jacket</h6>
+                            <h6>{{ $product->title }}</h6>
                             <a href="#" class="add-cart">+ Add To Cart</a>
                             <div class="rating">
                                 <i class="fa fa-star-o"></i>
@@ -307,7 +305,10 @@
                                 <i class="fa fa-star-o"></i>
                                 <i class="fa fa-star-o"></i>
                             </div>
-                            <h5>$67.24</h5>
+                            <span class="d-flex">
+                                <p class="px-1 text-dark">${{ $product->price }}</p>
+                                <p class="px-1 text-dark"><del>${{ $product->compare_price }}</del></p>
+                            </span>
                             <div class="product__color__select">
                                 <label for="pc-1">
                                     <input type="radio" id="pc-1">
@@ -322,110 +323,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-3 col-md-6 col-sm-6 col-sm-6">
-                    <div class="product__item">
-                        <div class="product__item__pic set-bg" data-setbg="{{ asset('frontend/img/product/product-2.jpg')}}">
-                            <ul class="product__hover">
-                                <li><a href="#"><img src="{{ asset('frontend/img/icon/heart.png')}}" alt=""></a></li>
-                                <li><a href="#"><img src="{{ asset('frontend/img/icon/compare.png')}}" alt=""> <span>Compare</span></a></li>
-                                <li><a href="#"><img src="{{ asset('frontend/img/icon/search.png')}}" alt=""></a></li>
-                            </ul>
-                        </div>
-                        <div class="product__item__text">
-                            <h6>Piqué Biker Jacket</h6>
-                            <a href="#" class="add-cart">+ Add To Cart</a>
-                            <div class="rating">
-                                <i class="fa fa-star-o"></i>
-                                <i class="fa fa-star-o"></i>
-                                <i class="fa fa-star-o"></i>
-                                <i class="fa fa-star-o"></i>
-                                <i class="fa fa-star-o"></i>
-                            </div>
-                            <h5>$67.24</h5>
-                            <div class="product__color__select">
-                                <label for="pc-4">
-                                    <input type="radio" id="pc-4">
-                                </label>
-                                <label class="active black" for="pc-5">
-                                    <input type="radio" id="pc-5">
-                                </label>
-                                <label class="grey" for="pc-6">
-                                    <input type="radio" id="pc-6">
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 col-sm-6 col-sm-6">
-                    <div class="product__item sale">
-                        <div class="product__item__pic set-bg" data-setbg="{{ asset('frontend/img/product/product-3.jpg')}}">
-                            <span class="label">Sale</span>
-                            <ul class="product__hover">
-                                <li><a href="#"><img src="{{ asset('frontend/img/icon/heart.png')}}" alt=""></a></li>
-                                <li><a href="#"><img src="{{ asset('frontend/img/icon/compare.png')}}" alt=""> <span>Compare</span></a></li>
-                                <li><a href="#"><img src="{{ asset('frontend/img/icon/search.png')}}" alt=""></a></li>
-                            </ul>
-                        </div>
-                        <div class="product__item__text">
-                            <h6>Multi-pocket Chest Bag</h6>
-                            <a href="#" class="add-cart">+ Add To Cart</a>
-                            <div class="rating">
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star-o"></i>
-                            </div>
-                            <h5>$43.48</h5>
-                            <div class="product__color__select">
-                                <label for="pc-7">
-                                    <input type="radio" id="pc-7">
-                                </label>
-                                <label class="active black" for="pc-8">
-                                    <input type="radio" id="pc-8">
-                                </label>
-                                <label class="grey" for="pc-9">
-                                    <input type="radio" id="pc-9">
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                @endforeach
 
-         <div class="col-lg-3 col-md-6 col-sm-6 col-sm-6">
-                    <div class="product__item">
-                        <div class="product__item__pic set-bg" data-setbg="{{ asset('frontend/img/product/product-4.jpg')}}">
-                            <ul class="product__hover">
-                                <li><a href="#"><img src="{{ asset('frontend/img/icon/heart.png')}}" alt=""></a></li>
-                                <li><a href="#"><img src="{{ asset('frontend/img/icon/compare.png')}}" alt=""> <span>Compare</span></a></li>
-                                <li><a href="#"><img src="{{ asset('frontend/img/icon/search.png')}}" alt=""></a></li>
-                            </ul>
-                        </div>
-                        <div class="product__item__text">
-                            <h6>Diagonal Textured Cap</h6>
-                            <a href="#" class="add-cart">+ Add To Cart</a>
-                            <div class="rating">
-                                <i class="fa fa-star-o"></i>
-                                <i class="fa fa-star-o"></i>
-                                <i class="fa fa-star-o"></i>
-                                <i class="fa fa-star-o"></i>
-                                <i class="fa fa-star-o"></i>
-                            </div>
-                            <h5>$60.9</h5>
-                            <div class="product__color__select">
-                                <label for="pc-10">
-                                    <input type="radio" id="pc-10">
-                                </label>
-                                <label class="active black" for="pc-11">
-                                    <input type="radio" id="pc-11">
-                                </label>
-                                <label class="grey" for="pc-12">
-                                    <input type="radio" id="pc-12">
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </section>

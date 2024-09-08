@@ -45,19 +45,15 @@
                                     <p class="error"></p>
                                 </div>
                                 <div class="col-md-12 mt-2">
-                                    {{-- <label for="sub_cat">Image</label>
-                                    <input type="file" name="image" class="form-control" id="image">
-                                    <p class="error"></p> --}}
-                                    <div class="card mb-3">
+                                    <label for="image">Image</label>
+                                    <input type="file" name="images[]" multiple class="form-control" id="image">
+                                    <p class="error"></p>
+                                    {{-- <div class="card mb-3">
                                         <div class="card-body">
                                             <h2 class="h4 mb-3">Media</h2>
-                                            <div id="image" class="dropzone dz-clickable">
-                                                <div class="dz-message needsclick">
-                                                    <br>Drop files here or click to upload.<br><br>
-                                                </div>
-                                            </div>
+                                            <input type="file" name="image[]" id="image">
                                         </div>
-                                    </div>
+                                    </div> --}}
                                 </div>
                                 <div class="row duplicate-row" id="duplicate-row">
                                     <div class="col-md-10 first" id="first">
@@ -72,7 +68,7 @@
                                                 </select>
                                                 <p class="error"></p>
                                             </div>
-                                        
+
                                             <div class="col-md-5 mt-2">
                                                 <label for="value">Attribute Value</label>
                                                 <select id="value" class="form-select value-select" name="value_id[]" multiple aria-label="multiple select">
@@ -80,7 +76,7 @@
                                                 </select>
                                                 <p class="error"></p>
                                             </div>
-                                        
+
                                             <div class="col-md-2 mt-5 remove"></div>
                                         </div>
                                     </div>
