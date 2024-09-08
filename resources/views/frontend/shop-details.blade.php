@@ -127,24 +127,18 @@
                                         </label>
                                     </div>
                                 </div>
-                                {{-- <form action="{{ route('add.to.cart') , $product->id}}" method="post">
-                                    @csrf --}}
-                                    <div class="product__details__cart__option">
-                                            {{-- <input type="hidden" name="product_id" class="product_id" value="{{ $product->id }}">
-                                            <input type="hidden" value="1" id="qty_value" name="qty"> --}}
-
-                                            <div class="quantity">
-                                                <div class="pro-qty">
-                                                    <input type="number" value="1">
-                                                </div>
-                                            </div>
-                                            <a href="#" class="primary-btn">add to cart</a>
+                                <div class="product__details__cart__option">
+                                    <div class="quantity">
+                                        <div class="pro-qty">
+                                            <input type="number" value="1">
+                                        </div>
                                     </div>
-                                    <div class="product__details__btns__option">
-                                        <a href="#"><i class="fa fa-heart"></i> add to wishlist</a>
-                                        <a href="#"><i class="fa fa-exchange"></i> Add To Compare</a>
-                                    </div>
-                                {{-- </form> --}}
+                                    <a href="#" class="primary-btn">add to cart</a>
+                                </div>
+                                <div class="product__details__btns__option">
+                                    <a href="#"><i class="fa fa-heart"></i> add to wishlist</a>
+                                    <a href="#"><i class="fa fa-exchange"></i> Add To Compare</a>
+                                </div>
                                 <div class="product__details__last__option">
                                     <h5><span>Guaranteed Safe Checkout</span></h5>
                                     <img src="{{ asset('frontend/img/shop-details/details-payment.png')}}" alt="">

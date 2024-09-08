@@ -53,9 +53,7 @@ Route::post('/contact' , [ContactController::class, 'store'])->name('store-conta
 Route::get('/cart' , [CartController::class, 'index'])->name('cart');
 Route::get('/checkout' , [CheckoutController::class, 'index'])->name('checkout');
 Route::get('/blog' , [BlogController::class, 'index'])->name('blog');
-Route::middleware(['auth'])->group(function () {
-    Route::post('/add-to-cart/{product}', [CartController::class , 'addToCart'])->name('add.to.cart');
-});
+
 Route::prefix('admin')->name('admin.')->group(function(){
     Route::middleware(GuestMiddleware::class)->group(function(){
         Route::get('/login' , [AdminLoginController::class, 'index']);
