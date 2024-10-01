@@ -17,7 +17,9 @@ use App\Http\Controllers\Frontend\AboutController;
 use App\Http\Controllers\Frontend\CartController;
 use App\Http\Controllers\Frontend\CheckoutController;
 use App\Http\Controllers\Frontend\ContactController;
+use App\Http\Controllers\Frontend\IndexController;
 use App\Http\Controllers\Frontend\ShopController;
+use App\Http\Controllers\Frontend\UserLoginController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\GuestMiddleware;
@@ -44,15 +46,24 @@ Route::middleware('auth')->group(function () {
 require __DIR__.'/auth.php';
 
 
-Route::get('/' , [HomeController::class, 'index'])->name('index');
+Route::get('/' , [IndexController::class, 'index'])->name('index');
 Route::get('/about' , [AboutController::class, 'index'])->name('about');
-Route::get('/shop' , [ShopController::class, 'index'])->name('shop');
-Route::get('product/{productId}/{slug}', [ShopController::class, 'product'])->name('detail');
+Route::get('/shop/{categorySlug?}/{subCategorySlug?}' , [ShopController::class, 'index'])->name('shop');
+Route::get('product/{id}/{slug}', [ShopController::class, 'product'])->name('detail');
 Route::get('/contact' , [ContactController::class, 'index'])->name('contact');
 Route::post('/contact' , [ContactController::class, 'store'])->name('store-contact');
 Route::get('/cart' , [CartController::class, 'index'])->name('cart');
-Route::get('/checkout' , [CheckoutController::class, 'index'])->name('checkout');
+// Route::get('/checkout' , [CheckoutController::class, 'check'])->name('checkout');
 Route::get('/blog' , [BlogController::class, 'index'])->name('blog');
+Route::get('/thank-you/{orderId}' , [CheckoutController::class, 'thankYou'])->name('thank-you');
+Route::middleware(['auth'])->group(function () {
+    Route::post('/add-to-cart/{product}', [CartController::class , 'addToCart'])->name('add.to.cart');
+    Route::post('/update-cart', [CartController::class, 'update'])->name('update.cart');
+    // Route::get('/cart/delete/{id}', [CartController::class, 'delete'])->name('delete.cart');
+    Route::delete('/remove-from-cart', [CartController::class, 'remove'])->name('remove.from.cart');
+    Route::get('/check-out', [CheckoutController::class , 'checkOut'])->name('check');
+    Route::post('/check-out', [CheckoutController::class, 'storeAddress'])->name('check-out');
+});
 
 Route::prefix('admin')->name('admin.')->group(function(){
     Route::middleware(GuestMiddleware::class)->group(function(){
@@ -144,6 +155,13 @@ Route::prefix('admin')->name('admin.')->group(function(){
         Route::get('/product/{id}/upload', [ProductImagesController::class, 'index'])->name('image-product');
         Route::post('/product/{id}/upload', [ProductImagesController::class, 'store'])->name('store-images');
 
+        //Country Routes
+        Route::get('/add-country' , [HomeController::class, 'country'])->name('country');
+        Route::post('/add-country' , [HomeController::class, 'store'])->name('add-country');
+        Route::get('/edit-country/{id}' , [HomeController::class, 'edit'])->name('edit-country');
+        Route::post('/update-country/{id}' , [HomeController::class, 'update'])->name('update-country');
+        Route::get('/show-country' , [HomeController::class, 'show'])->name('show-country');
+        Route::get('/country/delete/{id}', [HomeController::class, 'destroy'])->name('delete-country');
     });
 
 });

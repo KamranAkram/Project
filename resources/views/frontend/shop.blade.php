@@ -33,7 +33,7 @@
                         </div>
                         <div class="shop__sidebar__accordion">
                             <div class="accordion" id="accordionExample">
-                                <div class="card">
+                                {{-- <div class="card">
                                     <div class="card-heading">
                                         <a data-toggle="collapse" data-target="#collapseOne">Categories</a>
                                     </div>
@@ -41,32 +41,72 @@
                                         <div class="card-body">
                                             <div class="shop__sidebar__categories">
                                                 <ul class="nice-scroll">
-                                                    <li><a href="#">Men (20)</a></li>
-                                                    <li><a href="#">Women (20)</a></li>
-                                                    <li><a href="#">Bags (20)</a></li>
-                                                    <li><a href="#">Clothing (20)</a></li>
-                                                    <li><a href="#">Shoes (20)</a></li>
-                                                    <li><a href="#">Accessories (20)</a></li>
-                                                    <li><a href="#">Kids (20)</a></li>
-                                                    <li><a href="#">Kids (20)</a></li>
-                                                    <li><a href="#">Kids (20)</a></li>
+                                                @if ($subcategories->isNotEmpty())
+                                                    @foreach ($subcategories as $subcategory)
+                                                        <li><a href="#">{{ $subcategory->name }}</a></li>
+                                                    @endforeach
+                                                @endif
                                                 </ul>
                                             </div>
                                         </div>
                                     </div>
+                                </div> --}}
+                                <div class="categories__accordion">
+                                    <div class="accordion" id="accordionExample">
+                                        <div class="card" style="padding-bottom: 20px">
+                                            <div class="card-heading">
+                                                {{-- <a data-toggle="collapse" data-target="#collapseOne">{{$category->name}}</a> --}}
+                                                <a data-target="#collapseOne" data-toggle="collapse" style="text-decoration: none">Categories</a>
+                                            </div>
+                                                <div id="collapseOne" class="collapse show" data-parent="#accordionExample">
+                                                    <div class="card-body">
+                                                        @if($categories->isNotEmpty())
+                                                            @foreach ($categories as $key => $category)
+                                                                <div class="card">
+                                                                    <div class="card-heading">
+                                                                        {{-- <a data-toggle="collapse" data-target="#collapseOne">{{$category->name}}</a> --}}
+                                                                        @if ($category->subcategories->isNotEmpty())
+                                                                        <a data-target="#collapse-{{ $key }}" class="{{ ($categorySelected == $category->id) ? 'text-warning' : '' }}" data-toggle="collapse" style="text-decoration: none; font-weight:inherit; font-size:15px">{{ $category->name }}</a>
+                                                                        @else
+                                                                        <a href="{{ route('shop', $category->slug) }}" style="text-decoration: none; font-weight:inherit; font-size:15px">{{ $category->name }}</a>
+                                                                        @endif
+                                                                    </div>
+                                                                    @if ($category->subcategories->isNotEmpty())
+                                                                        <div id="collapse-{{ $key }}" class="collapse {{ ($categorySelected == $category->id) ? 'show' : '' }}" >
+                                                                            <div class="card-body">
+                                                                                <ul>
+                                                                                    @foreach ($category->subcategories as $sub_category)
+                                                                                        <li><a href="{{ route('shop', [$category->slug , $sub_category->slug]) }}"  class="{{ ($subCategorySelected == $sub_category->id) ? 'text-dark' : '' }}" style="text-decoration: none; font-weight:inherit; font-size:14px; color:darkgray">{{ $sub_category->name }}</a></li>
+                                                                                    @endforeach
+                                                                                </ul>
+                                                                            </div>
+                                                                        </div>
+                                                                    @endif
+                                                                </div>
+                                                            @endforeach
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                        </div>
+
+                                    </div>
                                 </div>
                                 <div class="card">
                                     <div class="card-heading">
-                                        <a data-toggle="collapse" data-target="#collapseTwo">Branding</a>
+                                        <a data-toggle="collapse" class="brand" data-target="#collapseTwo">Brands</a>
                                     </div>
                                     <div id="collapseTwo" class="collapse show" data-parent="#accordionExample">
                                         <div class="card-body">
                                             <div class="shop__sidebar__brand">
                                                 <ul>
-                                                    <li><a href="#">Louis Vuitton</a></li>
-                                                    <li><a href="#">Chanel</a></li>
-                                                    <li><a href="#">Hermes</a></li>
-                                                    <li><a href="#">Gucci</a></li>
+                                                    @if ($brands->isNotEmpty())
+                                                        @foreach ($brands as $brand)
+                                                            {{-- <li><a href="#">{{ $brand->name }}</a></li> --}}
+                                                            <input {{ (in_array($brand->id , $brandsArray)) ? 'checked' : '' }} type="checkbox" class="brand" name="brand[]" value="{{ $brand->id }}" id="brand-{{ $brand->id }}">
+                                                            <label for="brand-{{ $brand->id }}">{{ $brand->name }}</label>
+                                                            <br>
+                                                        @endforeach
+                                                    @endif
                                                 </ul>
                                             </div>
                                         </div>
@@ -79,14 +119,16 @@
                                     <div id="collapseThree" class="collapse show" data-parent="#accordionExample">
                                         <div class="card-body">
                                             <div class="shop__sidebar__price">
-                                                <ul>
+                                                {{-- <ul>
                                                     <li><a href="#">$0.00 - $50.00</a></li>
                                                     <li><a href="#">$50.00 - $100.00</a></li>
                                                     <li><a href="#">$100.00 - $150.00</a></li>
                                                     <li><a href="#">$150.00 - $200.00</a></li>
                                                     <li><a href="#">$200.00 - $250.00</a></li>
                                                     <li><a href="#">250.00+</a></li>
-                                                </ul>
+                                                </ul> --}}
+                                                <input type="text" class="js-range-slider text-warning" name="my_range" value="" />
+
                                             </div>
                                         </div>
                                     </div>
@@ -197,40 +239,42 @@
                             <div class="col-lg-6 col-md-6 col-sm-6">
                                 <div class="shop__product__option__right">
                                     <p>Sort by Price:</p>
-                                    <select>
-                                        <option value="">Low To High</option>
-                                        <option value="">$0 - $55</option>
-                                        <option value="">$55 - $100</option>
+                                    <select name="sort" id="sort">
+                                        <option value="latest" {{ ($sort == 'latest') ? 'selected' : ''}}>Latest</option>
+                                        <option value="price_desc" {{ ($sort == 'price_desc') ? 'selected' : ''}}>Price High</option>
+                                        <option value="price_asc" {{ ($sort == 'price_asc') ? 'selected' : ''}}>Price Low</option>
                                     </select>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="row">
+                        {{-- @dd($photo) --}}
                         @if ($products->isNotEmpty())
+                            {{-- @dd($products) --}}
+                            {{-- @dd($products->product_image->image) --}}
                             @foreach ($products as $product)
                             {{-- @php
-                            $productImage = $product->product_images->first();
+                            $productImage = $product->photo->first();
                             @endphp --}}
 
                                 <div class="col-lg-4 col-md-6 col-sm-6">
                                     <div class="product__item sale">
-                                        @if (!empty($productImage->image))
-                                        <div class="product__item__pic set-bg" data-setbg="{{ asset('uploads/products/' . $productImage->image)}}">
-                                        @else
-                                        <div class="product__item__pic set-bg" data-setbg="{{ asset('frontend/img/product/product-6.jpg')}}">
+                                        @if ($product->product_image->isNotEmpty())
+                                        <div class="product__item__pic set-bg" data-setbg="{{ asset($product->product_image[0]->image)}}">
+                                        {{-- <div class="product__item__pic set-bg" data-setbg="{{ asset('frontend/img/product/product-6.jpg')}}"> --}}
                                         @endif
-                                            <span class="label">Sale</span>
+                                            {{-- <span class="label">Sale</span> --}}
                                             <ul class="product__hover">
                                                 <li><a href=""><img src="{{ asset('frontend/img/icon/heart.png')}}" alt=""></a></li>
                                                 <li><a href="#"><img src="{{ asset('frontend/img/icon/compare.png')}}" alt=""> <span>Compare</span></a>
                                                 </li>
-                                                <li><a href="{{ route('detail', ['productId'=> $product->id , 'slug' => $product->slug ]) }}"><img src="{{ asset('frontend/img/icon/search.png')}}" alt=""></a></li>
+                                                <li><a href="{{ route('detail', [$product->id ,$product->slug ]) }}"><img src="{{ asset('frontend/img/icon/search.png')}}" alt=""></a></li>
                                             </ul>
                                         </div>
                                         <div class="product__item__text">
                                             <h6>{{ $product->title }}</h6>
-                                            <a href="#" class="add-cart">+ Add To Cart</a>
+                                            <a href="{{route('add.to.cart' , $product->id)}}" class="add-cart">+ Add To Cart</a>
                                             <div class="rating">
                                                 <i class="fa fa-star"></i>
                                                 <i class="fa fa-star"></i>
@@ -280,6 +324,7 @@
     </section>
     <!-- Shop Section End -->
 @endsection
+
 
 
 {{-- <script>

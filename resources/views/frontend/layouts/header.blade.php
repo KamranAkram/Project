@@ -9,6 +9,12 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Sigma Fashion</title>
 
+    	{{-- CSRF token  --}}
+	<meta name="csrf-token" content="{{ csrf_token() }}" />
+
+    {{-- CSS for Cards --}}
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
     <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&display=swap"
     rel="stylesheet">
@@ -22,6 +28,7 @@
     <link rel="stylesheet" href="{{asset('frontend/css/owl.carousel.min.css')}}" type="text/css">
     <link rel="stylesheet" href="{{asset('frontend/css/slicknav.min.css')}}" type="text/css">
     <link rel="stylesheet" href="{{asset('frontend/css/style.css')}}" type="text/css">
+    <link rel="stylesheet" href="{{asset('frontend/css/ion.rangeSlider.min.css')}}" type="text/css">
 </head>
 
 <body>
@@ -73,14 +80,19 @@
                     <div class="col-lg-6 col-md-5">
                         <div class="header__top__right">
                             <div class="header__top__links">
-                                @if(auth()->check() && auth()->user()->is_admin)
+                                @if(auth()->check() && !auth()->user()->is_admin)
 
-                                <a href="{{ route('login') }}">Log in</a>
-                                <a href="{{ route('register') }}">Register</a>
+                                <a href="{{ route('user.logout') }}" class="text-white">Log Out</a>
+                                {{-- <a href="{{ route('login') }}" class="text-white">Log in</a>
+                                <a href="{{ route('register') }}" class="text-white">Register</a> --}}
 
-                                @elseif(auth()->check() && !auth()->user()->is_admin)
 
-                                <a href="{{ route('logout') }}">Log Out</a>
+                                {{-- @elseif(auth()->check() && !auth()->user()->is_admin) --}}
+                                @elseif(!auth()->check())
+
+                                <a href="{{ route('login') }}" class="text-white">Log in</a>
+                                <a href="{{ route('register') }}" class="text-white">Register</a>
+                                {{-- <a href="{{ route('logout') }}" class="text-white">Log Out</a> --}}
 
                                 @endif
                                 {{-- <a href="#">FAQs</a> --}}
@@ -114,7 +126,7 @@
                                 <ul class="dropdown bg-white">
                                     <li><a href="" class="text-dark">Shop Details</a></li>
                                     <li><a href="{{ route('cart') }}" class="text-dark">Shopping Cart</a></li>
-                                    <li><a href="{{ route('checkout') }}" class="text-dark">Check Out</a></li>
+                                    <li><a href="{{ route('check') }}" class="text-dark">Check Out</a></li>
                                 </ul>
                             </li>
                             <li><a href="{{ route('blog') }}">Blog</a>

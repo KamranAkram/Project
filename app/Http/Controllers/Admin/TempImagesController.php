@@ -15,35 +15,35 @@ use Illuminate\Http\Request;
 
 class TempImagesController extends Controller
 {
-    public function create(Request $request){
-        $image = $request->image;
+    // public function create(Request $request){
+    //     $image = $request->image;
 
 
-        if(!empty($image)){
-            $ext = $image->getClientOriginalExtension();
-            $file = time() . '.' . $ext;
+    //     if(!empty($image)){
+    //         $ext = $image->getClientOriginalExtension();
+    //         $file = time() . '.' . $ext;
 
-            $tempImage = new TempImage;
-            $tempImage->name = $file;
-            $tempImage->save();
+    //         $tempImage = new TempImage;
+    //         $tempImage->name = $file;
+    //         $tempImage->save();
 
-            $image->move(public_path(). '/temp' , $file);
+    //         $image->move(public_path(). '/temp' , $file);
 
-            // Generating Thumbnail
-            $sourcePath = public_path(). ' /temp/ '. $file;
-            $destPath = public_path(). ' /temp/thumb/ '. $file;
-            // $image = Image::make($sourcePath);
-            $image->resize(300,275);
-            $image->save($destPath);
+    //         // Generating Thumbnail
+    //         $sourcePath = public_path(). ' /temp/ '. $file;
+    //         $destPath = public_path(). ' /temp/thumb/ '. $file;
+    //         // $image = Image::make($sourcePath);
+    //         $image->resize(300,275);
+    //         $image->save($destPath);
 
 
 
-            return response()->json([
-                "status" => true,
-                "image_id" => $tempImage->id,
-                "ImagePath" => asset('/temp/thumb/'. $file),
-                "message" =>"Image Uploaded Successfully"
-            ]);
-        }
-    }
+    //         return response()->json([
+    //             "status" => true,
+    //             "image_id" => $tempImage->id,
+    //             "ImagePath" => asset('/temp/thumb/'. $file),
+    //             "message" =>"Image Uploaded Successfully"
+    //         ]);
+    //     }
+    // }
 }

@@ -77,6 +77,7 @@
     <!-- Search End -->
 
     <!-- Js Plugins -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{{asset('frontend/js/jquery-3.3.1.min.js')}}"></script>
     <script src="{{asset('frontend/js/bootstrap.min.js')}}"></script>
     <script src="{{asset('frontend/js/jquery.nice-select.min.js')}}"></script>
@@ -87,6 +88,176 @@
     <script src="{{asset('frontend/js/mixitup.min.js')}}"></script>
     <script src="{{asset('frontend/js/owl.carousel.min.js')}}"></script>
     <script src="{{asset('frontend/js/main.js')}}"></script>
+    <script src="{{asset('frontend/js/ion.rangeSlider.min.js')}}"></script>
+    <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
+
 </body>
 
 </html>
+
+{{-- Js for Stripe Payment --}}
+
+<script type="text/javascript">
+
+    $(function() {
+
+        /*------------------------------------------
+        --------------------------------------------
+        Stripe Payment Code
+        --------------------------------------------
+        --------------------------------------------*/
+
+        var $form = $(".require-validation");
+        $('form.require-validation').bind('submit', function(e) {
+            var $form = $(".require-validation"),
+            inputSelector = ['input[type=email]', 'input[type=password]',
+                             'input[type=text]', 'input[type=file]',
+                             'textarea'].join(', '),
+            $inputs = $form.find('.required').find(inputSelector),
+            $errorMessage = $form.find('div.error'),
+            valid = true;
+            $errorMessage.addClass('hide');
+
+            $('.has-error').removeClass('has-error');
+            $inputs.each(function(i, el) {
+              var $input = $(el);
+              if ($input.val() === '') {
+                $input.parent().addClass('has-error');
+                $errorMessage.removeClass('hide');
+                e.preventDefault();
+              }
+            });
+            console.log('test');
+
+            if (!$form.data('cc-on-file')) {
+              e.preventDefault();
+              Stripe.setPublishableKey($form.data('stripe-publishable-key'));
+              Stripe.createToken({
+                number: $('.card-number').val(),
+                cvc: $('.card-cvc').val(),
+                exp_month: $('.card-expiry-month').val(),
+                exp_year: $('.card-expiry-year').val()
+              }, stripeResponseHandler);
+            }
+
+        });
+
+        /*------------------------------------------
+        --------------------------------------------
+        Stripe Response Handler
+        --------------------------------------------
+        --------------------------------------------*/
+        function stripeResponseHandler(status, response) {
+            if (response.error) {
+                $('.error')
+                    .removeClass('hide')
+                    .find('.alert')
+                    .text(response.error.message);
+            } else {
+                /* token contains id, last4, and card type */
+                var token = response['id'];
+
+                $form.find('input[type=text]').empty();
+                $form.append("<input type='hidden' name='stripeToken' value='" + token + "'/>");
+                $form.get(0).submit();
+            }
+        }
+
+    });
+</script>
+
+
+{{-- Update and remove cart --}}
+<script>
+    $(".update-cart").change(function (e) {
+        // alert('Success!');
+
+        var ele = $(this);
+
+
+        $.ajax({
+            url: '{{ route('update.cart') }}',
+            method: "post",
+            data: {
+                _token: '{{ csrf_token() }}',
+                id: ele.parents("tr").attr("data-id"),
+                quantity: ele.parents("tr").find(".qty").val()
+            },
+            success: function (response) {
+               window.location.reload();
+            }
+        });
+    });
+
+// Remove Cart
+    $(".remove-from-cart").click(function (e) {
+        e.preventDefault();
+
+        var ele = $(this);
+
+        if(confirm("Are you sure want to remove?")) {
+            $.ajax({
+                url: '{{ route('remove.from.cart') }}',
+                method: "DELETE",
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    id: ele.parents("tr").attr("data-id")
+                },
+                success: function (response) {
+                    window.location.reload();
+                }
+            });
+        }
+    });
+</script>
+
+<script>
+    rangeSlider= $(".js-range-slider").ionRangeSlider({
+        type: "double",
+        min: 0,
+        max: 1000,
+        from: {{ $priceMin }},
+        step: 10,
+        to: {{ $priceMax }},
+        skin: "round",
+        max_postfix: "+",
+        prefix: "$",
+        onFinish: function(){
+            apply_filters();
+        }
+    });
+    
+    var slider = $(".js-range-slider").data("ionRangeSlider");
+
+    $(".brand").change(function () {
+        apply_filters();
+    });
+
+    $("#sort").change(function () {
+        apply_filters();
+    });
+
+    function apply_filters(){
+        var brands = [];
+        $(".brand").each(function(){
+            if($(this).is(":checked") == true){
+                brands.push($(this).val());
+            }
+        });
+
+        var url = '{{ url()->current() }}?';
+
+        //Brand Filter
+        if(brands.length > 0){
+            url +=  '&brand=' + brands.toString()
+        }
+        //Price Range Filter
+        url += '&price_min='+slider.result.from+'&price_max='+slider.result.to;
+
+        //Sorting Filter
+        url += '&sort='+$("#sort").val()
+        // console.log(url);
+        window.location.href = url;
+    }
+
+</script>

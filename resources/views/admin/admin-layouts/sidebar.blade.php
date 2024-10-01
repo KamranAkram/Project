@@ -55,6 +55,12 @@
 					</li>
 
                     <li class="sidebar-item">
+						<a class="sidebar-link" href="{{ route('admin.show-country') }}">
+                            <i class="align-middle" data-feather="globe"></i> <span class="align-middle">Countries</span>
+                        </a>
+					</li>
+
+                    <li class="sidebar-item">
 						<a class="sidebar-link" href="{{ route('admin.show-contact') }}">
                             <i class="align-middle" data-feather="phone"></i> <span class="align-middle">Contacts</span>
                         </a>

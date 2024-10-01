@@ -3,13 +3,18 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
+use App\Models\Cart;
 use App\Models\Product;
 use Illuminate\Http\Request;
 
 class CartController extends Controller
 {
-    public function index(){
-        return view('frontend.shopping-cart');
+    public function index(Request $request){
+        $data['carts'] = session()->get('cart');
+        $data['products'] = Product::orderBy('id')->with('product_image')->where('status' , 1)->get();
+        $data['priceMax'] = (intval($request->get('price_max')) == 0) ? 1000 : $request->get('price_max');
+        $data['priceMin'] = intval($request->get('price_min'));
+        return view('frontend.shopping-cart')->with($data);
     }
 
     public function addToCart($id , Request $request)
@@ -23,16 +28,18 @@ class CartController extends Controller
                     $cart[$id]['quantity']++;
                 } else {
                     $cart[$id]= [
-                        "name" => $product->pname,
+                        "title" => $product->title,
+                        // "slug" => $product->slug,
                         "quantity" => $request->qty,
                         "price" => $product->price,
-                        "image" => $product->image
+                        "image" => $product->product_image[0]->image
                     ];
                 }
 
         session()->put('cart', $cart);
         return redirect()->back()->with('success', 'Product added to cart successfully!');
     }
+
 
     // Update cart
     public function update(Request $request)
@@ -57,4 +64,13 @@ class CartController extends Controller
             session()->flash('success', 'Product removed successfully');
         }
     }
+
+    // public function delete($id){
+    //     $value = Cart::find($id);
+    //     // dd($value);
+    //     if(!is_null($value)){
+    //         $value->delete();
+    //     }
+    //     return redirect('/cart');
+    // }
 }

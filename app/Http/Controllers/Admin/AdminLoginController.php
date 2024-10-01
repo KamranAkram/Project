@@ -34,7 +34,7 @@ class AdminLoginController extends Controller
     }
 
     public function logout(Request $request){
-        // Auth::guard('web')->logout();
+    // Auth::guard('web')->logout();
         if(auth()->user()->is_admin){
             Auth::logout();
         }

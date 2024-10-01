@@ -20,9 +20,9 @@ class GuestMiddleware
         }
 
         if(auth()->check() && !auth()->user()->is_admin){
-            return redirect()->route('dashboard');
+            return redirect('/');
         }
-        
+
         return $next($request);
     }
 }

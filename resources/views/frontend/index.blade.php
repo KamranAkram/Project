@@ -107,12 +107,13 @@
                 @foreach ($products as $product)
                     <div class="col-lg-3 col-md-6 col-sm-6 col-md-6 col-sm-6 mix new-arrivals">
                         <div class="product__item">
-                            <div class="product__item__pic set-bg" data-setbg="{{asset('frontend/img/product/product-1.jpg')}}">
-                                <span class="label">New</span>
+                            @if ($product->product_image->isNotEmpty())
+                            <div class="product__item__pic set-bg" data-setbg="{{ asset($product->product_image[0]->image)}}">
+                            @endif<span class="label">New</span>
                                 <ul class="product__hover">
                                     <li><a href="#"><img src="{{asset('frontend/img/icon/heart.png')}}" alt=""></a></li>
                                     <li><a href="#"><img src="{{asset('frontend/img/icon/compare.png')}}" alt=""> <span>Compare</span></a></li>
-                                    <li><a href="{{ route('detail' , $product->slug) }}"><img src="{{asset('frontend/img/icon/search.png')}}" alt=""></a></li>
+                                    <li><a href="{{ route('detail', [$product->id ,$product->slug ]) }}"><img src="{{asset('frontend/img/icon/search.png')}}" alt=""></a></li>
                                 </ul>
                             </div>
                             <div class="product__item__text">
