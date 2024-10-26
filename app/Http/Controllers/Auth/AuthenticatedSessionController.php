@@ -27,8 +27,11 @@ class AuthenticatedSessionController extends Controller
         $request->authenticate();
 
         $request->session()->regenerate();
-
-        return redirect()->intended(route('index', absolute: false));
+        // if(session()->has('url.intended')){
+        //     return redirect()->intended(session()->url('url.intended'));
+        // }
+        // return redirect(session()->get('url.intended'));
+        return redirect()->intended(route('cart', absolute: false));
     }
 
     public function logout(){

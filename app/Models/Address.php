@@ -19,13 +19,8 @@ class Address extends Model
         'apartment',
         'city',
         'region',
-        'zip',
+        'zip'
     ];
-
-    public function users()
-    {
-        return $this->belongsToMany(User::class, 'address_users');
-    }
 
 
 

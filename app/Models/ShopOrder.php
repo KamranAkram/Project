@@ -9,13 +9,13 @@ class ShopOrder extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'user_id',
-        'order_date',
-        'payment_method',
-        'address_id',
-        'order_total',
-    ];
+    // protected $fillable = [
+    //     'user_id',
+    //     'order_date',
+    //     'payment_method',
+    //     'address_id',
+    //     'order_total',
+    // ];
 
     public function address()
     {

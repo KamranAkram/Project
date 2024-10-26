@@ -274,7 +274,8 @@
                                         </div>
                                         <div class="product__item__text">
                                             <h6>{{ $product->title }}</h6>
-                                            <a href="{{route('add.to.cart' , $product->id)}}" class="add-cart">+ Add To Cart</a>
+                                            {{-- <a href="{{route('add.to.cart' , $product->id)}}" class="add-cart">+ Add To Cart</a> --}}
+                                            <a href="javascript:void(0);" onclick="addToCart({{ $product->id }});" class="add-cart">+ Add To Cart</a>
                                             <div class="rating">
                                                 <i class="fa fa-star"></i>
                                                 <i class="fa fa-star"></i>
@@ -324,6 +325,15 @@
     </section>
     <!-- Shop Section End -->
 @endsection
+
+{{-- @section('customJs')
+<script type="text/javascript">
+    function addToCart(id) {
+        alert(id);
+    }
+</script>
+@endsection --}}
+
 
 
 

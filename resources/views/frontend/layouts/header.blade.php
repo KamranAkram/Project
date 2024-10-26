@@ -29,6 +29,8 @@
     <link rel="stylesheet" href="{{asset('frontend/css/slicknav.min.css')}}" type="text/css">
     <link rel="stylesheet" href="{{asset('frontend/css/style.css')}}" type="text/css">
     <link rel="stylesheet" href="{{asset('frontend/css/ion.rangeSlider.min.css')}}" type="text/css">
+
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
 
 <body>

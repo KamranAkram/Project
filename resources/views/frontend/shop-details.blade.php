@@ -96,21 +96,23 @@
                                     </label>
                                 </div>
                             </div>
-                            <form action="{{ route('add.to.cart', $product->id) }}" method="post">
-                                @csrf
+                            {{-- <form action="{{ route('add.to.cart', $product->id) }}" method="post"> --}}
+                                {{-- @csrf --}}
                                 <div class="product__details__cart__option">
-                                    <input type="hidden" value="{{ $product->id }}" class="product_id" name="product_id">
-                                    <input type="hidden" value="1" id="qty_value" name="qty">
+                                    {{-- <input type="hidden" value="{{ $product->id }}" class="product_id" name="product_id"> --}}
+                                    {{-- <input type="hidden" value="1" id="qty_value" name="qty"> --}}
                                     <div class="quantity">
                                         <div class="pro-qty">
                                             <input type="text" value="1" name="qty">
                                             {{-- <input type="number" value="1" class="text-center" style="width: 30%" name="qty"> --}}
                                         </div>
                                     </div>
-                                    <button type="submit" class="primary-btn">Add to Cart</button>
+                                    {{-- <button type="submit" class="primary-btn">Add to Cart</button> --}}
                                     {{-- <a href="#" type="submit" class="btn primary-btn">add to cart</a> --}}
+                                    <a href="javascript:void(0);" onclick="addToCart({{ $product->id }});" class="btn primary-btn">Add To Cart</a>
+
                                 </div>
-                            </form>
+                            {{-- </form> --}}
 
                             <div class="product__details__btns__option">
                                 <a href="#"><i class="fa fa-heart"></i> add to wishlist</a>
@@ -280,7 +282,7 @@
                         </div>
                         <div class="product__item__text">
                             <h6>{{ $product->title }}</h6>
-                            <a href="#" class="add-cart">+ Add To Cart</a>
+                            <a href="javascript:void(0);" onclick="addToCart({{ $product->id }});" class="add-cart">+ Add To Cart</a>
                             <div class="rating">
                                 <i class="fa fa-star-o"></i>
                                 <i class="fa fa-star-o"></i>
@@ -314,11 +316,17 @@
     <!-- Related Section End -->
 @endsection
 
+@section('customJs')
 <script>
     function updateFeaturedImage(imageUrl) {
         document.getElementById('featuredImage').src = imageUrl;
     }
 </script>
+
+{{-- <script type="text/javascript">
+
+</script> --}}
+@endsection
 
 {{-- <!doctype html>
 <html lang="en">

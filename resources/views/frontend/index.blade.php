@@ -109,7 +109,8 @@
                         <div class="product__item">
                             @if ($product->product_image->isNotEmpty())
                             <div class="product__item__pic set-bg" data-setbg="{{ asset($product->product_image[0]->image)}}">
-                            @endif<span class="label">New</span>
+                            @endif
+                            <span class="label">New</span>
                                 <ul class="product__hover">
                                     <li><a href="#"><img src="{{asset('frontend/img/icon/heart.png')}}" alt=""></a></li>
                                     <li><a href="#"><img src="{{asset('frontend/img/icon/compare.png')}}" alt=""> <span>Compare</span></a></li>
@@ -118,7 +119,7 @@
                             </div>
                             <div class="product__item__text">
                                 <h6>{{ $product->title }}</h6>
-                                <a href="#" class="add-cart">+ Add To Cart</a>
+                                <a href="javascript:void(0);" onclick="addToCart({{ $product->id }});" class="add-cart">+ Add To Cart</a>
                                 <div class="rating">
                                     <i class="fa fa-star-o"></i>
                                     <i class="fa fa-star-o"></i>
@@ -193,7 +194,7 @@
                                 <p>Seconds</p>
                             </div>
                         </div>
-                        <a href="#" class="primary-btn">Shop now</a>
+                        <a href="{{ route('shop') }}" class="primary-btn">Shop now</a>
                     </div>
                 </div>
             </div>

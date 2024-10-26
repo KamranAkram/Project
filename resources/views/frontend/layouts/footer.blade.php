@@ -90,10 +90,36 @@
     <script src="{{asset('frontend/js/main.js')}}"></script>
     <script src="{{asset('frontend/js/ion.rangeSlider.min.js')}}"></script>
     <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
+    <script>
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        function addToCart(id) {
+        $.ajax({
+            type: "post",
+            url: "{{ route('add.to.cart') }}",
+            data: {id:id},
+            dataType: "json",
+            success: function (response) {
+                if (response.status == true) {
+                    window.location.href="{{ route('cart') }}";
+                } else {
+                    alert(response.message);
+                }
+            }
+        });
+    }
+    </script>
 
 </body>
 
 </html>
+
+@yield('customJs')
+
 
 {{-- Js for Stripe Payment --}}
 
@@ -226,7 +252,7 @@
             apply_filters();
         }
     });
-    
+
     var slider = $(".js-range-slider").data("ionRangeSlider");
 
     $(".brand").change(function () {

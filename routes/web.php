@@ -57,14 +57,18 @@ Route::get('/cart' , [CartController::class, 'index'])->name('cart');
 Route::get('/blog' , [BlogController::class, 'index'])->name('blog');
 Route::get('/thank-you/{orderId}' , [CheckoutController::class, 'thankYou'])->name('thank-you');
 Route::middleware(['auth'])->group(function () {
-    Route::post('/add-to-cart/{product}', [CartController::class , 'addToCart'])->name('add.to.cart');
+    // Route::post('/add-to-cart/{product}', [CartController::class , 'addToCart'])->name('add.to.cart');
+    Route::post('/add-to-cart', [CartController::class , 'addToCart'])->name('add.to.cart');
     Route::post('/update-cart', [CartController::class, 'update'])->name('update.cart');
     // Route::get('/cart/delete/{id}', [CartController::class, 'delete'])->name('delete.cart');
-    Route::delete('/remove-from-cart', [CartController::class, 'remove'])->name('remove.from.cart');
+    // Route::delete('/remove-from-cart', [CartController::class, 'remove'])->name('remove.from.cart');
+    Route::post('/remove-from-cart', [CartController::class, 'remove'])->name('remove.from.cart');
+
     Route::get('/check-out', [CheckoutController::class , 'checkOut'])->name('check');
     Route::post('/check-out', [CheckoutController::class, 'storeAddress'])->name('check-out');
 });
 
+Route::get('carts' , [CheckoutController::class, 'dummy']);
 Route::prefix('admin')->name('admin.')->group(function(){
     Route::middleware(GuestMiddleware::class)->group(function(){
         Route::get('/login' , [AdminLoginController::class, 'index']);

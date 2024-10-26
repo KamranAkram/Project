@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
 use App\Models\Address;
-use App\Models\Cart;
+// use App\Models\Cart;
 use App\Models\Country;
 use App\Models\OrderLine;
 use App\Models\Product;
@@ -13,28 +13,36 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 use Stripe\Climate\Order;
+use Gloudemans\Shoppingcart\Facades\Cart;
 
 // use subtotal;
 
 class CheckoutController extends Controller
 {
     public function checkOut(Request $request){
-        $data['carts'] = session()->get('cart');
-        $data['users'] = User::all();
+        // $data['carts'] = session()->get('cart');
+        // $data['users'] = User::all();
+
+        if(Cart::count() == 0){
+            return redirect()->route('cart');
+        }
+
+        $data['address'] = Address::where('user_id' , Auth::user()->id)->first();
         $data['countries'] = Country::all();
         $data['products'] = Product::all();
         $data['priceMax'] = (intval($request->get('price_max')) == 0) ? 1000 : $request->get('price_max');
         $data['priceMin'] = intval($request->get('price_min'));
+        $data['carts'] = Cart::content();
         return view('frontend.checkout')->with($data);
     }
 
     public function storeAddress(Request $request){
-         @dd($request->all());
+        //  @dd($request->all());
             // Apply Validation
 
-            $request->validate(
-                [
+            $validator = Validator::make($request->all(),[
                     'name'     => 'required|min:5',
                     'email'     => 'required|email',
                     'phone'     => 'required',
@@ -43,57 +51,63 @@ class CheckoutController extends Controller
                     'zip'          => 'required',
                     'city'          => 'required',
                     'region'        => 'required',
-                    'postal_code'   => 'required',
-                ]
-            );
-
+            ]);
             // dd($request->all());
 
+            if($validator->fails()){
+                return response()->json([
+                    'status' =>false,
+                    'message'=> 'Please fix the errors',
+                    'errors' => $validator->errors(),
+                ]);
+            }
 
             // Store User Address
             $user = Auth::user();
-            $carts = session()->get('cart');
 
 
-            // Address::Create(
-            //     ['user_id' => $user->id],
-            //     [
-            //         'user_id' => $user->id,
-            //         'name' => $request->name,
-            //         'email' => $request->email,
-            //         'phone' => $request->phone,
-            //         'country_id' => $request->country,
-            //         'address' => $request->address,
-            //         'apartment' => $request->apartment,
-            //         'city' => $request->city,
-            //         'region' => $request->region,
-            //         'zip' => $request->zip,
-            //     ]
-            // );
-            $address = Address::create([
-                'user_id' => $user->id,
-                'name' => $request->name,
-                'email' => $request->email,
-                'phone' => $request->phone,
-                'country_id' => $request->country,
-                'address' => $request->address,
-                'apartment' => $request->apartment,
-                'city' => $request->city,
-                'region' => $request->region,
-                'zip' => $request->zip,
-            ]);
+            Address::updateOrCreate(
+                ['user_id' => $user->id],
+                [
+                    'user_id' => $user->id,
+                    'name' => $request->name,
+                    'email' => $request->email,
+                    'phone' => $request->phone,
+                    'country_id' => $request->country,
+                    'address' => $request->address,
+                    'apartment' => $request->apartment,
+                    'city' => $request->city,
+                    'region' => $request->region,
+                    'zip' => $request->zip,
+                ]
+            );
+            // $address = Address::create([
+            //     'user_id' => $request->user_id,
+            //     'name' => $request->name,
+            //     'email' => $request->email,
+            //     'phone' => $request->phone,
+            //     'country_id' => $request->country,
+            //     'address' => $request->address,
+            //     'apartment' => $request->apartment,
+            //     'city' => $request->city,
+            //     'region' => $request->region,
+            //     'zip' => $request->zip,
+            // ]);
 
 
             // Store Order Data
 
-            if($request->payment == 'stripe'){
-                // $shipping = 0;
+            if($request->payment == 'cod'){
+
+                $shipping = 0;
+                $subTotal = Cart::subtotal(2, '.' ,'');
+                $grandTotal = $subTotal+$shipping;
+                // $carts = session()->get('cart');
+                // dd($carts);
                 $discount = 0;
-                $subTotal = $request->subtotal;
-                $grandTotal = $request->total;
                 $order = new ShopOrder;
                 $order->subtotal = $subTotal;
-                $order->shipping = $request->shipping;
+                $order->shipping = $shipping;
                 $order->grand_total = $grandTotal;
                 $order->user_id = $user->id;
                 // Address
@@ -111,27 +125,29 @@ class CheckoutController extends Controller
 
 
                 // Store Order Items in OrderLines Table
-                foreach($carts as $item){
+                foreach(Cart::content() as $item){
                     $orderItem = new OrderLine;
 
                     $orderItem->product_id = $item->id;
                     $orderItem->order_id = $order->id;
                     $orderItem->name = $item->name;
-                    $orderItem->quantity = $item->quantity;
+                    $orderItem->quantity = $item->qty;
                     $orderItem->price = $item->price;
-                    $orderItem->total = $item->quantity * $item->price;
+                    $orderItem->total = $item->qty * $item->price;
                     $orderItem->save();
                     // $orderItem->update($orderItem);
                 }
 
                 session()->flash('success' , 'Your order has been successfully placed');
+                Cart::destroy();
+
                 return response()->json([
                     'status' => true,
                     'orderId' => $order->id,
                     'message' => 'Order saved Successfully',
                 ]);
             }else{
-                //
+
             }
 
 
@@ -157,32 +173,40 @@ class CheckoutController extends Controller
 
 
             // Set your Stripe API key.
-        \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+        // \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
 
-        // Get the payment amount and email address from the form.
-        $amount = $request->input('total') * 100;
-        $email = $request->input('email');
+        // // Get the payment amount and email address from the form.
+        // $amount = $request->input('total') * 100;
+        // $email = $request->input('email');
 
-        // Create a new Stripe customer.
-        $customer = \Stripe\Customer::create([
-            'email' => $email,
-            'source' => $request->input('stripeToken'),
-        ]);
+        // // Create a new Stripe customer.
+        // $customer = \Stripe\Customer::create([
+        //     'email' => $email,
+        //     'source' => $request->input('stripeToken'),
+        // ]);
 
-        // Create a new Stripe charge.
-        $charge = \Stripe\Charge::create([
-            'customer' => $customer->id,
-            'amount' => $amount,
-            'currency' => 'usd',
-        ]);
+        // // Create a new Stripe charge.
+        // $charge = \Stripe\Charge::create([
+        //     'customer' => $customer->id,
+        //     'amount' => $amount,
+        //     'currency' => 'usd',
+        // ]);
 
 
-        return redirect('/thank-you' + '/' + 'orderId');
+        // return redirect('/thank-you' + '/' + 'orderId');
 
     }
 
 
-    public function thankYou(){
-        return view('frontend.thanks');
+    public function thankYou($id){
+        return view('frontend.thanks' , ['id' => $id]);
     }
+
+    // public function dummy(){
+    //     // $carts = session()->get('cart');
+    //     // print_r($carts);
+    //     // $carts = Auth::user()->with('shoppingCart')->get();
+    //     // return view('frontend.checkout')->with($data);
+    // }
+
 }
